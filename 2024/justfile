@@ -1,0 +1,12 @@
+default:
+    @just --list
+
+run DAY PART:
+    elixir "./day{{DAY}}/{{DAY}}-{{PART}}.exs"
+
+new DAY:
+    mkdir day{{DAY}}
+    touch "day{{DAY}}/data.txt" "day{{DAY}}/{{DAY}}-1.exs"  "day{{DAY}}/{{DAY}}-2.exs"
+    echo "IO.puts(\"Hello {{DAY}}-1\")" > "day{{DAY}}/{{DAY}}-1.exs"
+    echo "IO.puts(\"Hello {{DAY}}-2\")" > "day{{DAY}}/{{DAY}}-2.exs"
+
