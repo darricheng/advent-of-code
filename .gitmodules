@@ -1,0 +1,6 @@
+[submodule "advent-of-code-2022"]
+	path = advent-of-code-2022
+	url = https://github.com/darricheng/advent-of-code-2022
+[submodule "aoc2023"]
+	path = aoc2023
+	url = https://github.com/darricheng/aoc2023
