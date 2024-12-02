@@ -1,3 +1,7 @@
+IO.puts("Running [[DAY]]-[[PART]]")
+
+path = "./day[[DAY]]/data.txt"
+
 data =
   case File.read(path) do
     {:ok, data} ->
