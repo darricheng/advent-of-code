@@ -7,6 +7,7 @@ run DAY PART:
 new DAY:
     mkdir day{{DAY}}
     touch "day{{DAY}}/data.txt" "day{{DAY}}/{{DAY}}-1.exs"  "day{{DAY}}/{{DAY}}-2.exs"
-    echo "IO.puts(\"Hello {{DAY}}-1\")" > "day{{DAY}}/{{DAY}}-1.exs"
-    echo "IO.puts(\"Hello {{DAY}}-2\")" > "day{{DAY}}/{{DAY}}-2.exs"
 
+    printf '%s\n%s\n%s\n' "IO.puts(\"Running {{DAY}}-1\")" "path = \"day{{DAY}}/data.txt\"" "$(cat template.exs)" > "day{{DAY}}/{{DAY}}-1.exs"  
+
+    printf '%s\n%s\n%s\n' "IO.puts(\"Running {{DAY}}-2\")" "path = \"day{{DAY}}/data.txt\"" "$(cat template.exs)" > "day{{DAY}}/{{DAY}}-2.exs"  
