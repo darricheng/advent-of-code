@@ -18,4 +18,4 @@ defmodule AdventOfCode.Day[[DAY]]_[[PART]] do
   end
 end
 
-AdventOfCode.Day[[DAY]]_[[PART]].run()
+AdventOfCode.Day[[DAY]]_[[PART]].run() |> IO.inspect()
