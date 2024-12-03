@@ -7,7 +7,7 @@ defmodule AdventOfCode.Day[[DAY]]_[[PART]] do
     data =
       case File.read(path) do
         {:ok, data} ->
-          data
+          data |> String.trim()
 
         {:error, reason} ->
           IO.puts("File read failed. Reason: #{reason}")
