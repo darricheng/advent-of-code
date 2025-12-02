@@ -39,6 +39,7 @@ fn main() {
                 0
             } else {
                 // Convert to bytes slice so that it's easier to work with.
+                // This is fine because we only deal with numbers.
                 let bytes = i_str.as_bytes();
 
                 // Get the factors, which are the ways to to split the slice equally.
