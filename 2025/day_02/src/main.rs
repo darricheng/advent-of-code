@@ -52,20 +52,11 @@ fn main() {
 
                     let first_chunk = chunks.next().expect("Should have the first chunk");
 
-                    println!("first_chunk: {:?}", first_chunk);
-
-                    chunks.all(|chunk| {
-                        println!("chunk: {:?}", chunk);
-                        chunk == first_chunk
-                    })
+                    chunks.all(|chunk| chunk == first_chunk)
                 });
-
-                println!("meets_criteria: {:?}", meets_criteria);
 
                 if meets_criteria { i } else { 0 }
             };
-
-            println!("value_to_add: {}", value_to_add);
 
             acc + value_to_add
         });
