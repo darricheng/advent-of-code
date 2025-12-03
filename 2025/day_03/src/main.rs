@@ -140,6 +140,9 @@ fn get_largest_twelve_digit_number(bank: &str) -> u64 {
 * On each iteration, if the first number is the new largest first digit, we set
 * the second number as the new largest second digit. Otherwise, we check if the
 * second number is the new largest second digit and set it if so.
+*
+* (UPDATE)
+* As it turns out, the solution proposed works! At least it did for solving 3-2.
 */
 fn get_largest_two_digit_number(bank: &str) -> i32 {
     let bank_len = bank.len();
