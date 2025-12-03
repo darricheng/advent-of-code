@@ -15,6 +15,10 @@ fn main() {
     println!("{}", result);
 }
 
+fn get_largest_twelve_digit_number(bank: &str) -> u64 {
+    0
+}
+
 /**
 * 3-1
 *
@@ -58,22 +62,51 @@ fn get_largest_two_digit_number(bank: &str) -> i32 {
 
 #[cfg(test)]
 mod tests {
-    use super::get_largest_two_digit_number;
+    use super::*;
 
     #[test]
-    fn i_987654321111111() {
+    fn two_987654321111111() {
         assert_eq!(get_largest_two_digit_number("987654321111111"), 98);
     }
     #[test]
-    fn i_811111111111119() {
+    fn two_811111111111119() {
         assert_eq!(get_largest_two_digit_number("811111111111119"), 89);
     }
     #[test]
-    fn i_234234234234278() {
+    fn two_234234234234278() {
         assert_eq!(get_largest_two_digit_number("234234234234278"), 78);
     }
     #[test]
-    fn i_818181911112111() {
+    fn two_818181911112111() {
         assert_eq!(get_largest_two_digit_number("818181911112111"), 92);
+    }
+
+    #[test]
+    fn twelve_987654321111111() {
+        assert_eq!(
+            get_largest_twelve_digit_number("987654321111111"),
+            987654321111
+        );
+    }
+    #[test]
+    fn twelve_811111111111119() {
+        assert_eq!(
+            get_largest_twelve_digit_number("811111111111119"),
+            811111111119
+        );
+    }
+    #[test]
+    fn twelve_234234234234278() {
+        assert_eq!(
+            get_largest_twelve_digit_number("234234234234278"),
+            434234234278
+        );
+    }
+    #[test]
+    fn twelve_818181911112111() {
+        assert_eq!(
+            get_largest_twelve_digit_number("818181911112111"),
+            888911112111
+        );
     }
 }
