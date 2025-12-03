@@ -15,6 +15,20 @@ fn main() {
     println!("{}", result);
 }
 
+/**
+* 3-1
+*
+* (UNTESTED)
+* I think it's possible to do this in a single pass instead.
+* We iterate over pairs of the numbers, meaning indices 0 and 1, then 1 and 2,
+* until the second number reaches the last index.
+*
+* At the start, we take the first number and the second number as the largest
+* digit for each position respectively.
+* On each iteration, if the first number is the new largest first digit, we set
+* the second number as the new largest second digit. Otherwise, we check if the
+* second number is the new largest second digit and set it if so.
+*/
 fn get_largest_two_digit_number(bank: &str) -> i32 {
     let bank_len = bank.len();
     let (first_digit_index, first_digit) =
