@@ -1,5 +1,53 @@
 use std::fs;
 
+/**
+* 4-2
+*
+* On each pass of the grid to remove paper rolls, we get a fresh ascii placeholder.
+* This placeholder represents paper rolls that will be removed in this pass. That means
+* when checking neighbours, we consider this pass' ascii placeholder as a paper roll
+* along with the default '@' char. For the current paper roll that we are checking,
+* only the '@' char is a valid paper roll, though this shouldn't matter.
+*
+* On subsequent passes, these placeholders are as good as empty slots, i.e. they are
+* semantically equivalent to the '.' char.
+*
+* HYPOTHESIS: With this implementation, we should be able to do just a single pass of
+* the grid to remove paper rolls for this round without needing to maintain a separate
+* data structure to check which rolls were removed, then doing a second pass to remove
+* those rolls for that round of removals.
+*
+* We might have to do cleanup passes if we run out of placeholder characters. In such a
+* case, we'll have to convert everything that is not an '@' into '.', then continue
+* with the next pass of removals.
+*/
+
+struct AsciiPlaceholder(u8);
+impl AsciiPlaceholder {
+    fn new() -> Self {
+        AsciiPlaceholder(0)
+    }
+}
+impl Iterator for AsciiPlaceholder {
+    type Item = char;
+    fn next(&mut self) -> Option<Self::Item> {
+        // Doesn't matter what we start from
+        self.0 += 1;
+        let ascii_char = self.0 as char;
+
+        // Skip '@' and '.' as they already mean something significant for this puzzle
+        if ascii_char == '@' || ascii_char == '.' {
+            self.0 += 1;
+        }
+
+        if self.0 == u8::MAX {
+            None
+        } else {
+            Some(self.0 as char)
+        }
+    }
+}
+
 struct OffsetCounter(usize);
 impl OffsetCounter {
     fn new() -> Self {
@@ -48,13 +96,18 @@ impl PaperRolls {
                 .expect("Couldn't convert column_count into i32"),
         }
     }
-    fn check_is_paper_roll(self: &Self, row_index: usize, column_index: usize) -> bool {
+    fn check_is_paper_roll(
+        self: &Self,
+        row_index: usize,
+        column_index: usize,
+        other_roll_char: char,
+    ) -> bool {
         if let Some(item) = self
             .grid
             .get(row_index)
             .and_then(|row| row.get(column_index))
         {
-            *item == '@'
+            *item == '@' || *item == other_roll_char
         } else {
             false
         }
@@ -66,6 +119,7 @@ impl PaperRolls {
         self: &Self,
         row_index: usize,
         column_index: usize,
+        removed_roll_placeholder: char,
     ) -> usize {
         let offset_counter = OffsetCounter::new();
         let number_of_neighbour_rolls =
@@ -95,6 +149,7 @@ impl PaperRolls {
                     column_index_to_check
                         .try_into()
                         .expect("Couldn't convert back to usize"),
+                    removed_roll_placeholder,
                 ) {
                     total_neighbour_rolls + 1
                 } else {
@@ -103,6 +158,15 @@ impl PaperRolls {
             });
 
         number_of_neighbour_rolls
+    }
+
+    fn remove_roll(
+        self: &mut Self,
+        row_index: usize,
+        column_index: usize,
+        removed_roll_placeholder: char,
+    ) {
+        self.grid[row_index][column_index] = removed_roll_placeholder
     }
 }
 
@@ -146,26 +210,48 @@ impl Iterator for PaperRollIter {
 }
 
 fn main() {
-    let file_path = "data.txt";
+    let file_path = "sample.txt";
 
     let binding = fs::read_to_string(file_path).expect("Should have been able to read the file");
     let contents = binding.trim();
 
     let data: Vec<&str> = contents.split('\n').collect();
 
-    let paper_rolls = PaperRolls::new(data);
+    let mut paper_rolls = PaperRolls::new(data);
 
-    let paper_roll_iter = paper_rolls.into_iter();
+    let mut ascii_placeholder_iter = AsciiPlaceholder::new();
 
-    let result = paper_roll_iter.fold(0, |total, (row_index, column_index)| {
-        if paper_rolls.check_is_paper_roll(row_index, column_index)
-            && paper_rolls.check_number_of_neighbour_rolls(row_index, column_index) < 4
-        {
-            total + 1
-        } else {
-            total
+    let mut result = 0;
+    loop {
+        let paper_roll_iter = paper_rolls.into_iter();
+        let removed_roll_placeholder = ascii_placeholder_iter
+            .next()
+            .expect("Ran out of ascii placeholders");
+
+        let number_of_removed_rolls =
+            paper_roll_iter.fold(0, |total, (row_index, column_index)| {
+                // Just pass in '@' again
+                if paper_rolls.check_is_paper_roll(row_index, column_index, '@')
+                    && paper_rolls.check_number_of_neighbour_rolls(
+                        row_index,
+                        column_index,
+                        removed_roll_placeholder,
+                    ) < 4
+                {
+                    paper_rolls.remove_roll(row_index, column_index, removed_roll_placeholder);
+                    total + 1
+                } else {
+                    total
+                }
+            });
+
+        println!("{}", number_of_removed_rolls);
+
+        if number_of_removed_rolls == 0 {
+            break;
         }
-    });
+        result += number_of_removed_rolls;
+    }
 
     println!("{:?}", result);
 }
@@ -177,10 +263,10 @@ mod tests {
     #[test]
     fn check_paper_roll() {
         let paper_rolls = PaperRolls::new(vec!["@."]);
-        let is_paper_roll = paper_rolls.check_is_paper_roll(0, 0);
-        let is_not_paper_roll = paper_rolls.check_is_paper_roll(0, 1);
-        let is_row_too_big = paper_rolls.check_is_paper_roll(1, 1);
-        let is_column_too_big = paper_rolls.check_is_paper_roll(0, 2);
+        let is_paper_roll = paper_rolls.check_is_paper_roll(0, 0, '@');
+        let is_not_paper_roll = paper_rolls.check_is_paper_roll(0, 1, '@');
+        let is_row_too_big = paper_rolls.check_is_paper_roll(1, 1, '@');
+        let is_column_too_big = paper_rolls.check_is_paper_roll(0, 2, '@');
 
         assert_eq!(
             (
