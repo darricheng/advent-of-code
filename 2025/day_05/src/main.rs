@@ -48,7 +48,7 @@ impl Range {
 }
 
 fn main() {
-    let file_path = "sample.txt";
+    let file_path = "data.txt";
 
     let binding = fs::read_to_string(file_path).expect("Should have been able to read the file");
     let contents = binding.trim();
