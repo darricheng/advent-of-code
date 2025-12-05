@@ -1,7 +1,7 @@
 use std::fs;
 
 // Range(min, max)
-struct Range(u32, u32);
+struct Range(u64, u64);
 impl Range {
     fn new(range_str: &str) -> Self {
         let mut iter = range_str.split('-');
@@ -21,7 +21,7 @@ impl Range {
 }
 
 fn main() {
-    let file_path = "sample.txt";
+    let file_path = "data.txt";
 
     let binding = fs::read_to_string(file_path).expect("Should have been able to read the file");
     let contents = binding.trim();
@@ -38,7 +38,7 @@ fn main() {
         .collect();
 
     let result = number_strs.iter().fold(0, |total, num_str| {
-        let number: u32 = num_str.parse().expect("Couldn't parse into number");
+        let number: u64 = num_str.parse().expect("Couldn't parse into number");
 
         if ranges
             .iter()
