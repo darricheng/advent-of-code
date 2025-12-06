@@ -1,13 +1,6 @@
 use std::fs;
 
-fn main() {
-    let file_path = "data.txt";
-
-    let binding = fs::read_to_string(file_path).expect("Should have been able to read the file");
-    let contents = binding.trim();
-
-    let mut rows: Vec<&str> = contents.split('\n').collect();
-
+fn part_one(rows: &mut Vec<&str>) {
     let symbols_row: Vec<&str> = rows
         .pop()
         .expect("Couldn't get symbols row")
@@ -52,4 +45,15 @@ fn main() {
         .expect("???");
 
     println!("Result: {}", result);
+}
+
+fn main() {
+    let file_path = "data.txt";
+
+    let binding = fs::read_to_string(file_path).expect("Should have been able to read the file");
+    let contents = binding.trim();
+
+    let mut rows: Vec<&str> = contents.split('\n').collect();
+
+    part_one(&mut rows);
 }
