@@ -1,13 +1,6 @@
-use std::fs;
+use std::{fs, str::Split};
 
-fn main() {
-    let file_path = "data.txt";
-
-    let binding = fs::read_to_string(file_path).expect("Should have been able to read the file");
-    let contents = binding.trim_end_matches('\n');
-
-    let mut rows_iter = contents.split('\n');
-
+fn part_one(mut rows_iter: Split<'_, char>) {
     let first_row = rows_iter.next().expect("Should have first row");
     let mut tachyon_beams: Vec<bool> = first_row.chars().map(|char| char == 'S').collect();
     let row_length = tachyon_beams.len();
@@ -32,4 +25,15 @@ fn main() {
     });
 
     println!("Result: {}", result);
+}
+
+fn main() {
+    let file_path = "data.txt";
+
+    let binding = fs::read_to_string(file_path).expect("Should have been able to read the file");
+    let contents = binding.trim_end_matches('\n');
+
+    let rows_iter = contents.split('\n');
+
+    part_one(rows_iter);
 }
